@@ -290,29 +290,9 @@ namespace JLPlugin.Data
                 List<CardSlot> randomiseableslots = new List<CardSlot>();
                 foreach (int index in slotdata.index.Split('|').ToList().Select(int.Parse).ToList())
                 {
-                    int slotindex = index;
-                    if (ConvertArgument(slotdata.isRelative) == "true")
+                    if (ConvertIntToSlot(index, slotdata) != null)
                     {
-                        slotindex += relativeSlot.Index;
-                    }
-
-                    if (slotindex < 0 || slotindex > 3)
-                    {
-                        continue;
-                    }
-
-                    CardSlot slot = null;
-                    if (ConvertArgument(slotdata.isOpponentSlot) == "false")
-                    {
-                        slot = Singleton<BoardManager>.Instance.opponentSlots[slotindex];
-                    }
-                    else
-                    {
-                        slot = Singleton<BoardManager>.Instance.playerSlots[slotindex];
-                    }
-                    if (slot != null)
-                    {
-                        randomiseableslots.Add(slot);
+                        randomiseableslots.Add(ConvertIntToSlot(index, slotdata));
                     }
                 }
                 if (randomiseableslots.Count > 0)
@@ -335,28 +315,32 @@ namespace JLPlugin.Data
             }
             else
             {
-                int slotindex = int.Parse(slotdata.index);
-                if (ConvertArgument(slotdata.isRelative) == "true")
-                {
-                    slotindex += relativeSlot.Index;
-                }
-
-                if (slotindex < 0 || slotindex > 3)
-                {
-                    return null;
-                }
-
-                CardSlot slot = null;
-                if (ConvertArgument(slotdata.isOpponentSlot) == "false")
-                {
-                    slot = Singleton<BoardManager>.Instance.opponentSlots[slotindex];
-                }
-                else
-                {
-                    slot = Singleton<BoardManager>.Instance.playerSlots[slotindex];
-                }
-                return slot;
+                return ConvertIntToSlot(int.Parse(ConvertArgument(slotdata.index)), slotdata);
             }
+        }
+        
+        public CardSlot ConvertIntToSlot(int index, SlotData slotdata) 
+        {
+            if (ConvertArgument(slotdata.isRelative) == "true")
+            {
+                slotindex += relativeSlot.Index;
+            }
+
+            if (slotindex < 0 || slotindex > 3)
+            {
+                return null;
+            }
+
+            CardSlot slot = null;
+            if (ConvertArgument(slotdata.isOpponentSlot) == "false")
+            {
+                slot = Singleton<BoardManager>.Instance.opponentSlots[slotindex];
+            }
+            else
+            {
+                slot = Singleton<BoardManager>.Instance.playerSlots[slotindex];
+            }
+            return slot;
         }
     }
 }
