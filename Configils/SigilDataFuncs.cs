@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using DiskCardGame;
 using InscryptionAPI.Card;
 using JLPlugin.V2.Data;
