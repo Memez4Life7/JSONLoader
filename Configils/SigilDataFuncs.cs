@@ -278,6 +278,36 @@ namespace JLPlugin.Data
             yield break;
         }
 
+        public static bool CheckCondition(condition conditionInfo, CardSlot slot)
+        {
+            if (conditionInfo.slotIsEmpty == "true" && slot.Card != null) 
+            {
+                return false;
+            }
+            
+            if (conditionInfo.slotIsOccupied == "true" && slot.Card == null) 
+            {
+                return false;
+            }
+            
+            foreach(string cardname in conditionInfo.cardNameContains)
+            {
+                if (!slot.Card.displayedName.Contains(cardname)) 
+                {
+                    return false;
+                }
+            }
+            
+            foreach(Ability ability in conditionInfo.cardAbilities.Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList())
+            {
+                if (!slot.Card.Info.abilities.Contains(ability)) 
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static CardSlot GetSlot(SlotData slotdata, CardSlot relativeSlot)
         {
             if (slotdata == null)
